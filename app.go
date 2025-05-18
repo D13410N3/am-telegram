@@ -104,10 +104,6 @@ func parseChatIDs(base []string, overrides string) []string {
 	return ids
 }
 
-func formatHTMLLink(text, url string) string {
-	return fmt.Sprintf(`<a href="%s">%s</a>`, url, text)
-}
-
 func handleAlert(w http.ResponseWriter, r *http.Request) {
 	var payload AlertManagerPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
@@ -141,16 +137,13 @@ func handleAlert(w http.ResponseWriter, r *http.Request) {
 		emoji := emojiFor(alert)
 		title := ann["title"]
 		desc := ann["description"]
-
-		msg := fmt.Sprintf(`%s <b>%s</b>
-%s
-%s / %s / %s`,
+		msg := fmt.Sprintf("%s *%s*\n%s\n[Query](%s) / [Mute](%s) / [Grafana](%s)",
 			emoji,
 			title,
 			desc,
-			formatHTMLLink("Prom", promURL),
-			formatHTMLLink("Mute", amURL),
-			formatHTMLLink("Grafana", grafanaURL),
+			alert.GeneratorURL,
+			amURL,
+			grafanaURL,
 		)
 
 		for _, rcpt := range receivers {
