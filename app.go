@@ -166,7 +166,7 @@ func sendToTelegram(chatID, text string) {
 	body := map[string]string{
 		"chat_id":    chatID,
 		"text":       text,
-		"parse_mode": "HTML",
+		"parse_mode": "Markdown",
 	}
 	b, _ := json.Marshal(body)
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(b))
